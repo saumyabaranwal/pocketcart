@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "PocketCart",
+  "version": "1.0.0",
+  "description": "Save products from any website to your PocketCart dashboard.",
+  "permissions": ["tabs", "activeTab", "scripting"],
+  "host_permissions": ["http://localhost:5003/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Save to PocketCart"
+  }
+}

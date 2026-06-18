@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>PocketCart</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <p class="eyebrow">PocketCart</p>
+      <h1>Save this product?</h1>
+
+      <section class="preview">
+        <p id="productTitle">Loading current tab...</p>
+        <span id="productSource">Detecting source</span>
+      </section>
+
+      <label>
+        Notes
+        <textarea id="notes" placeholder="Add a quick note..."></textarea>
+      </label>
+
+      <label>
+        Collection
+        <input id="collection" type="text" value="Uncategorized" />
+      </label>
+
+      <button id="saveButton">Save to PocketCart</button>
+
+      <p id="statusMessage"></p>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
