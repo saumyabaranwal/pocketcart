@@ -35,28 +35,28 @@ PocketCart helped me understand how a real full-stack project works:
 Chrome Extension -> Express API -> MongoDB -> React Dashboard
 ```
 ## 💻 Tech Stack
-React + Vite
-Node.js + Express
-MongoDB Atlas + Mongoose
-Chrome Extension Manifest V3
-CSS
+- React + Vite
+- Node.js + Express
+- MongoDB Atlas + Mongoose
+- Chrome Extension Manifest V3
+- CSS
 
 ## Project Structure
-  pocketcart/
-  client/      React dashboard
-  server/      Express backend
-  extension/   Chrome extension
+  - pocketcart/
+  - client/      React dashboard
+  - server/      Express backend
+  - extension/   Chrome extension
 ## ✨ Current Features
-One-click product saving through extension
-Auto image capture using page metadata
-Search and filters
-Edit/delete saved products
-Duplicate URL prevention
-Retro pixel-inspired dashboard UI
+- One-click product saving through extension
+- Auto image capture using page metadata
+- Search and filters
+- Edit/delete saved products
+- Duplicate URL prevention
+- Retro pixel-inspired dashboard UI
 ## 🛠️ Future Plans
-User login
-Deployment
-Product comparison
-Better price extraction
-Cleaner extension popup
+- User login
+- Deployment
+- Product comparison
+- Better price extraction
+- Cleaner extension popup
 
