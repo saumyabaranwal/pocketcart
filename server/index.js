@@ -193,7 +193,7 @@ app.put("/api/collections/:id", async (req, res) => {
         res.json(updatedCollection);
     } catch (error) {
         console.error("Update collection error: ", error);
-        res.status(400).jsonp({ message: "Failed to update collection " });
+        res.status(400).json({ message: "Failed to update collection " });
     }
 });
 app.delete("/api/collections/:id", async (req, res) => {
