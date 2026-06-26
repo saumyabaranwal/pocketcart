@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: true,
-            // never returned by default in queries (e.g. User.find())
             select: false,
         },
         name: {
