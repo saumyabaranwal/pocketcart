@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5003/api";
+const API_BASE = "https://pocketcart-ip9v.onrender.com/api";
 const PRODUCTS_URL = `${API_BASE}/products`;
 const AUTH_URL = `${API_BASE}/auth`;
 
