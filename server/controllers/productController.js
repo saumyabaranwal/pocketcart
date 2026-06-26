@@ -66,17 +66,22 @@ async function getProductById(req, res) {
 
 async function updateProduct(req, res) {
     try {
+        const updateData = {
+            title: req.body.title,
+            url: req.body.url,
+            source: req.body.source,
+            price: req.body.price || "",
+            notes: req.body.notes || "",
+            collection: req.body.collection || "Uncategorized",
+        };
+
+        if (req.body.image !== undefined) {
+            updateData.image = req.body.image;
+        }
+
         const updatedProduct = await Product.findOneAndUpdate(
             { _id: req.params.id, userId: req.userId },
-            {
-                title: req.body.title,
-                url: req.body.url,
-                source: req.body.source,
-                image: req.body.image || "",
-                price: req.body.price || "",
-                notes: req.body.notes || "",
-                collection: req.body.collection || "Uncategorized",
-            },
+            updateData,
             { new: true, runValidators: true }
         );
         if (!updatedProduct) {

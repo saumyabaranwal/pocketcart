@@ -413,6 +413,7 @@ h1 {
   background: #fffdf4;
   padding: 9px;
   font: inherit;
+  color: #111;
 }
 
 .edit-modal textarea {

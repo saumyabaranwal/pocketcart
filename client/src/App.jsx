@@ -91,6 +91,7 @@ function App() {
       price: product.price || "",
       notes: product.notes || "",
       collection: product.collection || "Uncategorized",
+      image: product.image || "",
     });
   }
 
