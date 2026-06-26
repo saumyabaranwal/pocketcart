@@ -1,13 +1,50 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>PocketCart</title>
-    <link rel="stylesheet" href="popup.css" />
-  </head>
-  <body>
-    <main class="popup-shell">
-      <p class="eyebrow">PocketCart</p>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>PocketCart</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+  <main class="popup-shell">
+    <p class="eyebrow">PocketCart</p>
+
+    <section id="loginView" class="hidden">
+      <h1 id="loginHeading">Log in</h1>
+
+      <div class="auth-tabs">
+        <button type="button" id="tabLogin" class="auth-tab active">Log in</button>
+        <button type="button" id="tabSignup" class="auth-tab">Sign up</button>
+      </div>
+
+      <label id="nameField" class="hidden">
+        Name
+        <input id="authName" type="text" placeholder="Your name" />
+      </label>
+
+      <label>
+        Email
+        <input id="authEmail" type="email" placeholder="you@example.com" />
+      </label>
+
+      <label>
+        Password
+        <input id="authPassword" type="password" placeholder="At least 6 characters" />
+      </label>
+
+      <button id="authSubmitButton" type="button">Log in</button>
+
+      <p id="authMessage"></p>
+    </section>
+
+    <section id="saveView" class="hidden">
+      <div class="account-row">
+        <span id="accountEmail"></span>
+        <button id="logoutButton" type="button" class="link-button">Log out</button>
+      </div>
+
       <h1>Save this product?</h1>
 
       <section class="preview">
@@ -28,8 +65,10 @@
       <button id="saveButton">Save to PocketCart</button>
 
       <p id="statusMessage"></p>
-    </main>
+    </section>
+  </main>
 
-    <script src="popup.js"></script>
-  </body>
+  <script src="popup.js"></script>
+</body>
+
 </html>

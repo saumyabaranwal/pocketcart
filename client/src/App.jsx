@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   ExternalLink,
+  LogOut,
   Pencil,
   RefreshCw,
   Search,
@@ -9,9 +10,15 @@ import {
   X,
 } from "lucide-react";
 import "./App.css";
+import Login from "./pages/Login";
+import { authFetch, clearSession, getStoredUser, getToken } from "./api";
 
 const API_URL = "http://localhost:5003/api/products";
+
 function App() {
+  const [currentUser, setCurrentUser] = useState(() => getStoredUser());
+  const [isCheckingAuth] = useState(false);
+
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [collection, setCollection] = useState("");
@@ -36,8 +43,11 @@ function App() {
   }, [products]);
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    if (currentUser && getToken()) {
+      fetchProducts();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser]);
 
   async function fetchProducts(filters = {}) {
     try {
@@ -60,41 +70,42 @@ function App() {
       const queryString = params.toString();
       const url = queryString ? `${API_URL}?${queryString}` : API_URL;
 
-      const response = await fetch(url);
+      const response = await authFetch(url);
       const data = await response.json();
 
-      setProducts(data);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Failed to fetch products:", error);
     } finally {
       setIsLoading(false);
     }
   }
+
   function startEditing(product) {
-  console.log("Editing product:", product);
-  setEditingProduct(product);
+    setEditingProduct(product);
 
-  setEditForm({
-    title: product.title,
-    url: product.url,
-    source: product.source,
-    price: product.price || "",
-    notes: product.notes || "",
-    collection: product.collection || "Uncategorized",
-  });
-}
-function cancelEditing() {
-  setEditingProduct(null);
-}
-function handleEditChange(event) {
-  const { name, value } = event.target;
+    setEditForm({
+      title: product.title,
+      url: product.url,
+      source: product.source,
+      price: product.price || "",
+      notes: product.notes || "",
+      collection: product.collection || "Uncategorized",
+    });
+  }
 
-  setEditForm((currentForm) => ({
-    ...currentForm,
-    [name]: value,
-  }));
-}
+  function cancelEditing() {
+    setEditingProduct(null);
+  }
 
+  function handleEditChange(event) {
+    const { name, value } = event.target;
+
+    setEditForm((currentForm) => ({
+      ...currentForm,
+      [name]: value,
+    }));
+  }
 
   function handleSearch(event) {
     const value = event.target.value;
@@ -120,36 +131,38 @@ function handleEditChange(event) {
     setSource("");
     fetchProducts({ search: "", collection: "", source: "" });
   }
+
   async function saveEdit(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  try {
-    const response = await fetch(`${API_URL}/${editingProduct._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(editForm),
-    });
+    try {
+      const response = await authFetch(`${API_URL}/${editingProduct._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editForm),
+      });
 
-    const updatedProduct = await response.json();
+      const updatedProduct = await response.json();
 
-    if (!response.ok) {
-      console.error(updatedProduct.message || "Failed to update product");
-      return;
+      if (!response.ok) {
+        console.error(updatedProduct.message || "Failed to update product");
+        return;
+      }
+
+      setProducts((currentProducts) =>
+        currentProducts.map((product) =>
+          product._id === updatedProduct._id ? updatedProduct : product
+        )
+      );
+
+      setEditingProduct(null);
+    } catch (error) {
+      console.error("Update product error:", error);
     }
-
-    setProducts((currentProducts) =>
-      currentProducts.map((product) =>
-        product._id === updatedProduct._id ? updatedProduct : product
-      )
-    );
-
-    setEditingProduct(null);
-  } catch (error) {
-    console.error("Update product error:", error);
   }
-}
+
   async function deleteProduct(productId) {
     const confirmDelete = window.confirm("Delete this product from PocketCart?");
 
@@ -158,7 +171,7 @@ function handleEditChange(event) {
     }
 
     try {
-      const response = await fetch(`${API_URL}/${productId}`, {
+      const response = await authFetch(`${API_URL}/${productId}`, {
         method: "DELETE",
       });
 
@@ -175,30 +188,21 @@ function handleEditChange(event) {
     }
   }
 
-  async function deleteProduct(productId) {
-    const confirmDelete = window.confirm("Delete this product from PocketCart?");
-
-    if (!confirmDelete) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/${productId}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        console.error("Failed to delete product");
-        return;
-      }
-
-      setProducts((currentProducts) =>
-        currentProducts.filter((product) => product._id !== productId)
-      );
-    } catch (error) {
-      console.error("Delete product error:", error);
-    }
+  function handleLogout() {
+    clearSession();
+    setProducts([]);
+    setCurrentUser(null);
   }
+
+  // not logged in -> show the login/signup screen
+  if (!currentUser || !getToken()) {
+    return <Login onAuthSuccess={(user) => setCurrentUser(user)} />;
+  }
+
+  if (isCheckingAuth) {
+    return null;
+  }
+
   return (
     <main className="app-shell">
       <section className="top-bar">
@@ -248,6 +252,15 @@ function handleEditChange(event) {
 
         <button type="button" className="icon-button" onClick={() => fetchProducts()}>
           <RefreshCw size={17} />
+        </button>
+
+        <button
+          type="button"
+          className="icon-button"
+          onClick={handleLogout}
+          title={`Log out (${currentUser?.email || ""})`}
+        >
+          <LogOut size={17} />
         </button>
       </section>
 
@@ -303,70 +316,55 @@ function handleEditChange(event) {
           <p>Saved products will appear here once they match your filters.</p>
         </section>
       )}
+
       {editingProduct && (
-  <section className="modal-backdrop">
-    <form className="edit-modal" onSubmit={saveEdit}>
-      <div className="modal-header">
-        <h2>Edit product</h2>
-        <button type="button" onClick={cancelEditing}>
-          <X size={18} />
-        </button>
-      </div>
+        <section className="modal-backdrop">
+          <form className="edit-modal" onSubmit={saveEdit}>
+            <div className="modal-header">
+              <h2>Edit product</h2>
+              <button type="button" onClick={cancelEditing}>
+                <X size={18} />
+              </button>
+            </div>
 
-      <label>
-        Title
-        <input
-          name="title"
-          value={editForm.title}
-          onChange={handleEditChange}
-        />
-      </label>
+            <label>
+              Title
+              <input name="title" value={editForm.title} onChange={handleEditChange} />
+            </label>
 
-      <label>
-        URL
-        <input name="url" value={editForm.url} onChange={handleEditChange} />
-      </label>
+            <label>
+              URL
+              <input name="url" value={editForm.url} onChange={handleEditChange} />
+            </label>
 
-      <label>
-        Source
-        <input
-          name="source"
-          value={editForm.source}
-          onChange={handleEditChange}
-        />
-      </label>
+            <label>
+              Source
+              <input name="source" value={editForm.source} onChange={handleEditChange} />
+            </label>
 
-      <label>
-        Price
-        <input
-          name="price"
-          value={editForm.price}
-          onChange={handleEditChange}
-        />
-      </label>
+            <label>
+              Price
+              <input name="price" value={editForm.price} onChange={handleEditChange} />
+            </label>
 
-      <label>
-        Collection
-        <input
-          name="collection"
-          value={editForm.collection}
-          onChange={handleEditChange}
-        />
-      </label>
+            <label>
+              Collection
+              <input
+                name="collection"
+                value={editForm.collection}
+                onChange={handleEditChange}
+              />
+            </label>
 
-      <label>
-        Notes
-        <textarea
-          name="notes"
-          value={editForm.notes}
-          onChange={handleEditChange}
-        />
-      </label>
+            <label>
+              Notes
+              <textarea name="notes" value={editForm.notes} onChange={handleEditChange} />
+            </label>
 
-      <button type="submit">Save changes</button>
-    </form>
-  </section>
-)}
+            <button type="submit">Save changes</button>
+          </form>
+        </section>
+      )}
     </main>
   );
 }

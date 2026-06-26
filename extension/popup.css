@@ -96,3 +96,63 @@ button:disabled {
   font-size: 0.82rem;
   font-weight: 800;
 }
+
+
+.hidden {
+  display: none !important;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 5px;
+  border: 3px solid #111;
+  background: #d8fff6;
+}
+
+.auth-tab {
+  min-height: 32px;
+  border: 3px solid #111;
+  background: #fffdf4;
+  color: #111;
+  box-shadow: none;
+  font-size: 0.75rem;
+}
+
+.auth-tab.active {
+  background: #111;
+  color: #fff;
+}
+
+#authMessage {
+  min-height: 18px;
+  margin: 10px 0 0;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  word-break: break-all;
+}
+
+.link-button {
+  width: auto;
+  min-height: auto;
+  padding: 4px 8px;
+  border: 2px solid #111;
+  background: #ff7aa8;
+  color: #111;
+  box-shadow: none;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
