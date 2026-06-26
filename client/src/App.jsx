@@ -13,7 +13,7 @@ import "./App.css";
 import Login from "./pages/Login";
 import { authFetch, clearSession, getStoredUser, getToken } from "./api";
 
-const API_URL = "http://localhost:5003/api/products";
+const API_URL = "https://pocketcart-ip9v.onrender.com/api/products";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(() => getStoredUser());
