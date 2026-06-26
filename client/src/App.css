@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Jersey+25&family=Martel+Sans:wght@200;300;400;600;700;800;900&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Space+Mono:wght@400;700&display=swap");
+html {
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
 :root {
   font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
     Consolas, monospace;
@@ -92,7 +96,7 @@ h1 {
 
 .toolbar {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) 180px 180px auto auto;
+  grid-template-columns: minmax(260px, 1fr) 180px 180px auto auto auto;
   gap: 9px;
   align-items: center;
   margin-bottom: 18px;
@@ -358,14 +362,17 @@ h1 {
   padding: 18px;
   background: rgba(17, 17, 17, 0.45);
   z-index: 999;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .edit-modal {
   display: grid;
   gap: 10px;
-  width: min(520px, 100%);
+  width: min(520px, calc(100vw - 36px));
   max-height: calc(100vh - 36px);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 18px;
   border: 3px solid #111;
   background: #f4bfd4;
