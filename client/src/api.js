@@ -1,4 +1,4 @@
-const AUTH_API_URL = "http://localhost:5003/api/auth";
+const AUTH_API_URL = "https://pocketcart-ip9v.onrender.com/api/auth";
 const TOKEN_KEY = "pocketcart_token";
 const USER_KEY = "pocketcart_user";
 
