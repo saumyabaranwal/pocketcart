@@ -40,7 +40,6 @@ function Login({ onAuthSuccess }) {
     <main className="login-shell">
       <section className="login-card">
         <div className="login-brand">
-          <ShoppingBag size={28} />
           <h1>PocketCart</h1>
         </div>
 
